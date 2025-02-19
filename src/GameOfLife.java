@@ -1,12 +1,13 @@
 /* compilar el archivo javac src/GameOfLife.java ...
+javac src/*.java
 ejecutar ejemplo java -cp src GameOfLife w=10 h=20 g=100 s=300 p=”101#010#111” n=1
 
  */
 
-import java.util.Random;
-
 public class GameOfLife {
     public static void main (String [] args) {
+
+        // Creo las variables a utilizar y separo en clave-valor, leo args []
         int width = 0, height = 0, generations = 0, speed = 0, neighborhood = 0;
         String poblation = "";
 
@@ -16,6 +17,8 @@ public class GameOfLife {
                 String key = parts[0];
                 String value = parts[1];
 
+
+        // Asigno los parametros recibidos a las variables creadas
                 switch (key) {
                     case "w":
                         if(isInterger(value)) {
@@ -44,23 +47,29 @@ public class GameOfLife {
                         }
                         break;
 
-                    case "g": generations = Integer.parseInt(value);
-                        // valor especial infinito 0, tecla ¿?
-                        if(generations >=0) {
-                            System.out.println("generations :" + generations);
-                            break;
-                        } else {
-                            System.out.println("generations: " + "[not available]");
-                            break;
-                        }
-                    case "s": speed = Integer.parseInt(value);
-                        if (speed == 250 || speed == 500 || speed == 1000 || speed == 1500 ) {
-                            System.out.println("speed : " + speed);
-                            break;
-                        } else {
-                            System.out.println("speed: " + "[not available]");
+                    case "g":
+                        if(isInterger(value)) {
+                            generations = Integer.parseInt(value);
+                            // valor especial infinito 0, tecla ¿?
+                            if (generations >= 0) {
+                                System.out.println("generations :" + generations);
+                            } else {
+                                System.out.println("generations: " + "[not available]");
+                            }
                             break;
                         }
+                            case "s":
+                        if (isInterger(value)) {
+                            int tempSpeed = Integer.parseInt(value);
+                            if (tempSpeed == 0) {
+                                System.out.println("speed: " + "[not available], se usará el valor por defecto (1000ms)");
+                                speed = 1000; // Valor por defecto si no es válido
+                            }
+                        } else {
+                            System.out.println("speed: " + "[invalid input], se usará el valor por defecto (1000ms)");
+                            speed = 1000; // Valor por defecto si no es un número
+                        }
+                        break;
 
                     case "p":
                         poblation = value.replace("\"", "");
@@ -77,6 +86,7 @@ public class GameOfLife {
                         if (parcialneighborhood >= 1 || parcialneighborhood <= 5){
                             neighborhood = parcialneighborhood;
                             System.out.println("neighborhood :" + neighborhood);
+
                         } else {
                             neighborhood = 3;
                         }
@@ -91,71 +101,19 @@ public class GameOfLife {
             }
         }
 
-        int[][] gameBoard = createBoardGame(width, height, poblation);
+        // Empiezo a ejecutar el juego, creo el tablero
+        System.out.println("Iniciando el Juego de la Vida...");
+        BoardGame board = new BoardGame(width, height, poblation,speed, neighborhood, generations);
+        board.getBoardGame();
+
         if(poblation.isEmpty()) {
             System.out.println("El tablero no se puede generar con los parametros dados");
         } else {
             System.out.println("poblacion inicial : ");
-            showBoard(gameBoard);
         }
-
 
     }
 
-    public static int[][] createBoardGame(int width, int height, String poblation) {
-        if(width == 0 || height == 0 || poblation.isEmpty()) {
-            return new int[0][0];
-        }
-       String endPoblation =  random(poblation, height, width);
-       int [][] board = new int[height][width];
-       String [] filas = endPoblation.split("#");
-
-       for( int fila = 0; fila < board.length && fila < filas.length; fila++) {
-           String filaPoblation = filas[fila];
-           for( int columnas = 0;columnas < filaPoblation.length() && columnas < board[fila].length; columnas++ ) {
-               char c = filaPoblation.charAt(columnas);
-               if (c == '0' || c == '1') {
-                   board[fila][columnas] = c - '0'; // Conversión correcta
-               } else {
-                   System.out.println("Error: Caracter inesperado en poblation -> " + c);
-               }
-
-           }
-
-       }
-        return board;
-    }
-    public static String random (String poblation, int height, int width) {
-        if (poblation.equals("rnd")) {
-            Random randomPopulation = new Random();
-            StringBuilder poblationRandom = new StringBuilder();
-
-            for (int i = 0; i < height; i++) {
-                StringBuilder row = new StringBuilder();
-                for (int j = 0; j < width; j++) {
-                    row.append(randomPopulation.nextInt(2));
-                }
-                poblationRandom.append(row.toString());
-                // Si no es la última fila, agregamos el separador #
-                if (i < height - 1) {
-                    poblationRandom.append("#");
-                }
-
-            }
-
-             poblation = poblationRandom.toString();
-        }
-        return poblation;
-    }
-
-    public static void showBoard (int [][] board) {
-        for (int[] fila : board) {
-            for (int celda : fila) {
-                System.out.print(celda + " ");
-            }
-            System.out.println();
-        }
-    }
     public static boolean isInterger(String str) {
         try {
             Integer.parseInt(str);
@@ -164,6 +122,7 @@ public class GameOfLife {
             return false;
         }
     }
+
 
 
 
