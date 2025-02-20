@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.util.Random;
 
 public class BoardGame {
@@ -75,14 +76,18 @@ public class BoardGame {
         // Crear una instancia de Neighborhood
         Neighborhood neighborhood = new Neighborhood(neighbor, boarForGenerations);
 
-        while (count < generations) {
+        stopGame();
+        while (generations == 0 || count < generations && !stopRequested) {
             System.out.println("Tablero en generación: " + count);
             renderBoard(neighborhood.getStartBoard());
 
             // Actualizar el tablero con la nueva generación
             neighborhood.updateBoard();
 
+
             count++;
+
+
         }
         return neighborhood.getStartBoard();
     }
@@ -122,5 +127,18 @@ public class BoardGame {
         return boarForGenerations;
     }
 
-
+    boolean stopRequested = false;
+   public void stopGame () {
+       Thread stopThread = new Thread(() -> {
+           try {
+               System.in.read(); // Espera hasta que el usuario presione una tecla
+               stopRequested = true;
+               System.out.println("\nDeteniendo el juego...");
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       });
+       stopThread.setDaemon(true);
+       stopThread.start();
+   }
 }
