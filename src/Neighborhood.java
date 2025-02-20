@@ -11,16 +11,17 @@ public class Neighborhood {
     }
 
 
-
     public Cell [][] getNeighborhood() {
         if (startBoard == null || startBoard.length == 0 || startBoard[0].length == 0) {
             throw new IllegalStateException("El tablero no puede estar vacío o nulo.");
         }
+
         int height = startBoard.length;
         int width = startBoard[0].length;
         int[] moveInX;
         int[] moveInY;
 
+        // Asigno el vecindario
         switch (neighbor) {
             case 1 -> {
                 //Jala University
@@ -33,10 +34,12 @@ public class Neighborhood {
                 moveInY = new int[]{0, 1, 0, -1};
             }
             case 4 -> {
+                // reverse
                 moveInX = new int[]{1, 1, 1, 0, 0, -1, -1, -1};
                 moveInY = new int[]{1, 0, -1, 1, -1, 1, 0, -1};
             }
             case 5 -> {
+                //custom
                 moveInX = new int[]{1, -1, 1, -1};
                 moveInY = new int[]{1, 1, -1, -1};
             }
@@ -60,6 +63,7 @@ public class Neighborhood {
             for (int j = 0; j < width; j++) {
                 int aliveNeighbors = 0;
 
+                // itinero en el vecindario elegido
                 for (int k = 0; k < moveInX.length; k++) {
                     int newRow = i + moveInX[k];
                     int newCol = j + moveInY[k];

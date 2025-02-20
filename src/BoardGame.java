@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.Random;
 
@@ -20,7 +19,7 @@ public class BoardGame {
         this.speed = speed;
     }
 
-
+    // Metodo para crear la poblacion random
     public static String getrandomPoblation(String poblation, int height, int width) {
         if (poblation.equals("rnd")) {
             Random randomPopulation = new Random();
@@ -44,7 +43,7 @@ public class BoardGame {
         return poblation;
     }
 
-    // creo el tablero inicial vacio.
+    // creo el tablero inicial con la poblacion del args
     public Cell[][] startBoardGame() {
         if (width <= 0 || height <= 0 || poblation == null || poblation.isEmpty()) {
             throw new IllegalStateException("Dimensiones inválidas o población vacía.");
@@ -66,17 +65,19 @@ public class BoardGame {
     }
 
 
-    // creo el tablero y lo renderizo
     public Cell[][] getBoardGame(Cell[][] board) {
         int count = 0;
 
         // Copiar el tablero inicial
         Cell[][] boarForGenerations = copyGame(board);
 
-        // Crear una instancia de Neighborhood
+        // Creo el vecindario en el tablero que copie
         Neighborhood neighborhood = new Neighborhood(neighbor, boarForGenerations);
 
+        // estoy atenta a si el usuario detiene el juego
         stopGame();
+
+
         while (generations == 0 || count < generations && !stopRequested) {
             System.out.println("Tablero en generación: " + count);
             renderBoard(neighborhood.getStartBoard());
@@ -84,16 +85,13 @@ public class BoardGame {
             // Actualizar el tablero con la nueva generación
             neighborhood.updateBoard();
 
-
             count++;
-
-
         }
         return neighborhood.getStartBoard();
     }
 
 
-
+    // renderizo el talbero con la velocidad asignada
     public void renderBoard(Cell[][] board) {
         for (Cell[] fila : board) {
             for (Cell celda : fila) {
@@ -114,6 +112,7 @@ public class BoardGame {
         }
     }
 
+
     private Cell [][] copyGame (Cell [][] board) {
         Cell [][] boarForGenerations = new Cell [height][width];
 
@@ -128,10 +127,11 @@ public class BoardGame {
     }
 
     boolean stopRequested = false;
-   public void stopGame () {
+    // Hilo de ejecucion que espera a que el usuario presione una tecla para detener el juego
+    public void stopGame () {
        Thread stopThread = new Thread(() -> {
            try {
-               System.in.read(); // Espera hasta que el usuario presione una tecla
+               System.in.read();
                stopRequested = true;
                System.out.println("\nDeteniendo el juego...");
            } catch (IOException e) {

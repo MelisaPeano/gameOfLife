@@ -12,13 +12,12 @@ public class GameOfLife {
         String poblation = "";
 
         for (String arg : args) {
-            String[] parts = arg.split("="); // separo por clave valor
-            if (parts.length == 2) { // Asegurar que tiene la forma clave=valor
+            String[] parts = arg.split("=");
+            if (parts.length == 2) {
                 String key = parts[0];
                 String value = parts[1];
 
-
-                // Asigno los parametros recibidos a las variables creadas
+                // valido args
                 switch (key) {
                     case "w":
                         if (isInteger(value)) {
@@ -123,13 +122,13 @@ public class GameOfLife {
         }
 
 
-        // Empiezo a ejecutar el juego, creo el tablero
+        // Empiezo a ejecutar el juego
         System.out.println("Iniciando el Juego de la Vida...");
+        //creo el tableero base
         BoardGame board = new BoardGame(width, height, poblation,speed, neighborhood, generations);
-        Cell [][] boardEnd =  board.startBoardGame(); // tablero con la pob pasada por parámetro
+        // tablero con la pob pasada por parámetro
+        Cell [][] boardEnd =  board.startBoardGame();
         board.getBoardGame(boardEnd);
-
-
 
     }
 
