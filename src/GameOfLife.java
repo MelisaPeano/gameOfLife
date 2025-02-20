@@ -104,13 +104,10 @@ public class GameOfLife {
         // Empiezo a ejecutar el juego, creo el tablero
         System.out.println("Iniciando el Juego de la Vida...");
         BoardGame board = new BoardGame(width, height, poblation,speed, neighborhood, generations);
-        board.getBoardGame();
+        Cell [][] boardEnd =  board.startBoardGame(); // tablero con la pob pasada por parámetro
+        board.getBoardGame(boardEnd);
 
-        if(poblation.isEmpty()) {
-            System.out.println("El tablero no se puede generar con los parametros dados");
-        } else {
-            System.out.println("poblacion inicial : ");
-        }
+
 
     }
 
