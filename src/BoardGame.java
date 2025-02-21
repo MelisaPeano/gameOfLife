@@ -8,6 +8,7 @@ public class BoardGame {
     private String poblation;
     private int generations;
     private int speed;
+    private boolean stopRequested;
 
 
     public BoardGame(int width, int height, String poblation, int speed, int neighbor, int generations) {
@@ -17,6 +18,7 @@ public class BoardGame {
         this.neighbor = neighbor;
         this.generations = generations;
         this.speed = speed;
+        this.stopRequested = false;
     }
 
     // Metodo para crear la poblacion random
@@ -78,7 +80,7 @@ public class BoardGame {
         stopGame();
 
 
-        while (generations == 0 || count < generations && !stopRequested) {
+        while ((generations == 0 || count < generations) && !stopRequested) {
             System.out.println("Tablero en generación: " + count);
             renderBoard(neighborhood.getStartBoard());
 
@@ -98,7 +100,7 @@ public class BoardGame {
                 if (celda == null) {
                     System.out.print(". ");
                 } else if (celda.getState() == 1) {
-                    System.out.print("X ");
+                    System.out.print("■ ");
                 } else {
                     System.out.print(". ");
                 }
@@ -126,7 +128,7 @@ public class BoardGame {
         return boarForGenerations;
     }
 
-    boolean stopRequested = false;
+
     // Hilo de ejecucion que espera a que el usuario presione una tecla para detener el juego
     public void stopGame () {
        Thread stopThread = new Thread(() -> {
